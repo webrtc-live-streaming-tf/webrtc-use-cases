@@ -1,47 +1,136 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>MyNote</title>
-    <script
-      defer
-      class="remove"
-      src="https://www.w3.org/Tools/respec/respec-w3c"
-    ></script>
-    <script class="remove">
-      // See: https://respec.org/docs/ for all configuration options
-      var respecConfig = {
-        shortName: "my-note",
-        specStatus: "ED", // "WG-NOTE"
-        noRecTrack: true,
-        edDraftURI: "https://w3c.github.io/mynote/",
-        editors: [
-          {
-            name: "Victor Hugo",
-            w3cid: "0000",
-          },
-        ],
-        group: "webperfs", // find your group at https://respec.org/w3c/groups/
-        github: {
-          repoURL: "w3c/mynote",
-          branch: "master",
-        },
-      };
-    </script>
-  </head>
-  <body>
-    <section id="abstract">
-      <p>This is a Note.</p>
-    </section>
-    <section id="sotd">
-      <p>This is a placeholder document.</p>
-    </section>
-    <section id="purpose">
-      <h2>Purpose</h2>
+<html lang="en">
+
+<head>
+  <title>WebRTC Use Cases and Requirements for Live Streaming Multimedia Ecosystem</title>
+  <meta charset='utf-8'>
+  <link rel="stylesheet" href="./local.css" />
+  <script src='https://www.w3.org/Tools/respec/respec-w3c' async class='remove'></script>
+  <script class='remove'>
+    var respecConfig = {
+      specStatus: "CG-DRAFT",
+      shortName: "webrtc-live-streaming-use-cases",
+      edDraftURI: "https://webrtc-live-streaming-tf.github.io/webrtc-use-cases/",
+      editors: [{
+        name: "Song Xu",
+        companyURL: 'http://www.migu.cn',
+        company: "China Mobile"
+
+      }, {
+        name: "Cheng Chen",
+        companyURL: "https://www.bytedance.com/",
+        company: "ByteDance"
+      }, {
+        name: "Lei Zhao",
+        companyURL: "http://www.migu.cn",
+        company: "China Mobile"
+      },
+      
+      {
+        name: "Fuqiao Xue",
+        companyURL: "http://www.chinaw3c.org/",
+        company: "W3C"
+      }],
+      wg: "Chinese Web Interest Group",
+      wgURI: "https://www.w3.org/2018/chinese-web-ig/",
+      github: {
+        repoURL: "https://github.com/webrtc-live-streaming-tf/webrtc-use-cases",
+        branch: "main"
+      },
+    };
+  </script>
+</head>
+
+<body>
+  <section id='abstract'>
+    <p>
+      This document describes use cases and requirements for WebRTC used in Live Streaming Multimedia Ecosystem .
+    </p>
+  </section>
+  <section id='sotd'>
+    <p>
+      This is still a work in progress. The proposal is being incubated in the <a
+        href="https://www.w3.org/2018/chinese-web-ig/">Chinese Web Interest Group</a>.
+    </p>
+  </section>
+  <section>
+    <h2>Introduction</h2>
+    <p>
+      The current livestreaming multimedia ecosystem is showing diverse and robust growth trends. It covers
+      livestreaming content from both institutions and individuals in various fields to meet the diverse needs of users.
+      In this ecosystem, major tech companies are strategically involved in different areas to provide richer,
+      practical, and entertaining livestreaming experiences.
+
+    </p>
+
+    <p>
+
+      Alibaba Group demonstrates strong capabilities in the livestreaming sector. Its livestreaming e-commerce combines
+      shopping and entertainment, offering consumers immersive shopping experiences. Through methods like hosts
+      showcasing products and interactive Q&A sessions, consumers are engaged in making purchases. Additionally, Alibaba
+      also offers fundamental livestreaming cloud services, spanning education and gaming sectors, providing technical
+      support for creating livestreaming platforms for businesses and individuals.
+
+    </p>
+
+    <p>
+
+      Chia Mobile MiGu, an integrated media platform, focuses on providing diverse livestreaming content. Particularly in
+      large-scale event livestreaming, MiGu offers real-time broadcasts of significant events like sports competitions
+      and music concerts, meeting users' demand for immediate experiences. Moreover, MiGu experiments with
+      virtual-physical interactions using technologies like digital avatars, creating a more enriched virtual
+      interactive experience for users.
+
+
+    </p>
+
+    <p>
+      ByteDance plays a crucial role in interactive entertainment, online education, and conferencing. Its TikTok
+      platform has become a globally popular short video platform, providing users with abundant entertainment content,
+      including livestreaming. ByteDance has also ventured into livestreamed educational content to accommodate learners
+      seeking flexible learning approaches. In the business sector, its livestreamed conferencing solutions offer
+      efficient remote communication and collaboration platforms for enterprises.
+    </p>
+  </section>
+
+  <section>
+    <h2>Terminology</h2>
+    <p>
+      This document uses the following terms with the specific meanings defined here. Where possible these meanings are
+      consistent with common usage. However, note that common usage of some of these terms have multiple, ambiguous, or
+      inconsistent meanings. The definition here will take precedence. When terms are used with the specific meanings
+      defined here they will be capitalized. When possible reference to existing standards defining these terms is
+      given.
+    </p>
+    <dl>
+      <dt><dfn class="lint-ignore">WebRTC</dfn></dt>
+      <dd>Web Real-Time Communication</dd>
+    </dl>
+  </section>
+
+
+  <section>
+
+    <h2>Use Cases</h2>
+
+    <section>
+      <h2>Generic Packetization and Depacketization Mechanism for Audio Transmission</h2>
       <p>
-        This is a placeholder. Check the
-        <a href="https://respec.org/docs/">ReSpec documentation</a>.
+        When transmitting audio data, sending audio packets with a size greater than 1500 bytes per frame will result in transmission failure.Spatial audio formats like "Audio Vivid" have audio packets per frame that are larger than 1500 bytes, requiring developers to handle packetization and depacketization separately.
       </p>
     </section>
-  </body>
+
+
+    <section>
+      <h2>Receiving sounds from other devices when in background</h2>
+      <p>
+        An iOS device that has the microphone enabled and then switches to the background is unable to hear sounds from other devices. 
+      </p>
+    </section>
+
+  </section>
+
+
+</body>
+
 </html>
