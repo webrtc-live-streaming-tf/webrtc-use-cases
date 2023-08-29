@@ -25,7 +25,7 @@
         companyURL: "http://www.migu.cn",
         company: "China Mobile"
       },
-      
+
       {
         name: "Fuqiao Xue",
         companyURL: "http://www.chinaw3c.org/",
@@ -75,7 +75,8 @@
 
     <p>
 
-      Chia Mobile MiGu, an integrated media platform, focuses on providing diverse livestreaming content. Particularly in
+      Chia Mobile MiGu, an integrated media platform, focuses on providing diverse livestreaming content. Particularly
+      in
       large-scale event livestreaming, MiGu offers real-time broadcasts of significant events like sports competitions
       and music concerts, meeting users' demand for immediate experiences. Moreover, MiGu experiments with
       virtual-physical interactions using technologies like digital avatars, creating a more enriched virtual
@@ -106,29 +107,146 @@
       <dt><dfn class="lint-ignore">WebRTC</dfn></dt>
       <dd>Web Real-Time Communication</dd>
     </dl>
+
+    <dl>
+      <dt><dfn class="lint-ignore">Audio Vivid</dfn></dt>
+      <dd>The first AI-based audio encoding and decoding standard, released by the UHD World Association (UWA). Within
+        the Audio Vivid three-dimensional space, sound objects can be precisely positioned and moved freely, while also
+        presenting richer sound details, constructing expansive or subtle three-dimensional soundscapes.</dd>
+    </dl>
+  </section>
+
+
+  <section>
+    <h2>Use Cases</h2>
+    <section>
+      <h2 id="uc-cb">5G Cloud Box (UC-CB)</h2>
+
+      <p>
+        A "Cloud Box" can be understood as a cloud-based private room, similar to the private room we have in our real
+        lives. Friends can come together in these rooms to chat, watch movies, and watching sports events. In sports
+        broadcasts, fans can participate in predictions and discussions about ongoing matches through the "5G Cloud Box"
+        feature, enabling them to share their insights and forecasts in real-time. The Cloud Box feature bridges the gap
+        between individuals, enhancing their immersive experience and interaction.
+      </p>
+
+      <p>In order to provide a more immersive user experience, spatial audio is utilized in WebRTC.</p>
+
+      <figure id="fig-uc-cb">
+        <img alt="WebMedia" src="images/UC-CB.png" width="300">
+        <figcaption><span>5G Cloud Box</span></figcaption>
+      </figure>
+    </section>
+
+
+    <section>
+      <h2 id="UC-LC">Real-time Live Commerce (UC-RLC)</h2>
+      <p>
+
+        Real-time Live Commerce, also known as real-time livestream shopping, is an innovative retail trend that merges
+        real-time streaming
+        with e-commerce. In Live Commerce sessions, businesses and brands showcase their products or services on live
+        online platforms, such as social media and e-commerce websites, while simultaneously engaging with the audience
+        in direct interactions. During these live sessions, hosts or salespeople introduce product features, demonstrate
+        usage, address viewer inquiries, and offer exclusive deals or limited-time promotions.
+
+      </p>
+
+      <p>
+
+        Viewers can actively participate by using real-time commenting or chat features to interact with the hosts. They
+        can ask questions, express their interest in purchasing, and even share their own product experiences with
+        fellow viewers. When a viewer shows interest in a particular product, they can instantly make a purchase using
+        dedicated links or designated purchasing methods.
+      </p>
+
+      <p>
+
+        Live Commerce provides a uniquely interactive and entertaining shopping experience. Viewers gain immediate
+        insights into product details, witness live demonstrations, and benefit from additional information provided by
+        the hosts. This high level of engagement not only enhances consumer confidence in making purchase decisions but
+        also introduces a dynamic and powerful approach to brand marketing.
+      </p>
+
+      <p>WebRTC can be used in this Scenario.</p>
+    </section>
   </section>
 
 
   <section>
 
-    <h2>Use Cases</h2>
+    <h2>Requirements</h2>
 
-    <section>
+    <section id="r1-uc-cb">
       <h2>Generic Packetization and Depacketization Mechanism for Audio Transmission</h2>
+
+      <p>This requirement is for <a href="#uc-cb">UC-CB</a>.</p>
+
       <p>
-        When transmitting audio data, sending audio packets with a size greater than 1500 bytes per frame will result in transmission failure.Spatial audio formats like "Audio Vivid" have audio packets per frame that are larger than 1500 bytes, requiring developers to handle packetization and depacketization separately.
+        When transmitting audio data, sending audio packets with a size greater than 1500 bytes per frame will result in
+        transmission failure.
       </p>
+
+      <p>
+        Spatial audio codecs like <a href="#dfn-audio-vivid">Audio Vivid</a> have audio packets per frame that are
+        larger than
+        1500 bytes, requiring developers to handle packetization and depacketization separately. In order to improve
+        development efficiency,
+        a generic packetization and depacketization mechanism for audio transmission is needed.
+      </p>
+
+      <p>The mechanism should not be mandatory, for some proprietary audio codecs may have its own packetization and
+        depacketization mechanisms.</p>
+
+      <p>A proposed packetization and depacketization workflow can be outlined as follows: </p>
+
+      <figure id="fig-uc-cb">
+        <img alt="WebMedia" src="images/webrtc-packetization-depacketization.png" width="600">
+        <figcaption><span>a proposed Packetization and Depacketization Workflow</span></figcaption>
+      </figure>
+
+    </section>
+
+
+    <section id="r2-uc-cb">
+      <h2>Receiving sounds from other devices when in background</h2>
+
+      <p>This requirement is for <a href="#uc-cb">UC-CB</a>.</p>
+
+      <p>
+        An iOS device that has the microphone enabled and then switches to the background is unable to hear sounds from
+        other devices when some device unmutes.
+      </p>
+
+      <p>
+        This issue can be reproduced as follows:
+
+      <ul>
+        <li>Devices A and B join a WebRTC conference, B is an iOS device, A is any device</li>
+        <li>Both devices activate microphones</li>
+        <li>Device B goes to the background (e.g., Home button).</li>
+        <li>Device A's voice is audible to B.</li>
+        <li>Device A mutes its microphone.</li>
+        <li>Device A unmutes and speaks.</li>
+        <li>Device B can't hear A, even if B goes back to the foreground.</li>
+      </ul>
+
+      </p>
+
     </section>
 
 
     <section>
-      <h2>Receiving sounds from other devices when in background</h2>
+      <h2>Statistics for Audio and Video Stuttering and Initial Frame Time</h2>
+      <p>Currently, WebRTC has encompassed Quality of Service (QoS) metrics including resolution, frame rate, bit rate, and packet loss, and interfaces have been exposed for developers to access various metrics. However,  metrics related to audio and video stuttering, as well as initial frame time, have not yet been provided for statistical analysis and reporting. In WebRTC applications such as interactive live streaming and video conferencing, metrics concerning audio and video stuttering, along with initial frame time, are considered crucial QoS indicators. They offer enhanced insights into the quality of audio and video communication.</p>
       <p>
-        An iOS device that has the microphone enabled and then switches to the background is unable to hear sounds from other devices. 
+        The definition of <b>stuttering</b> needs to be officially defined, and developers can customize the duration of the interval that qualifies as a single instance of stuttering.
       </p>
+
     </section>
 
   </section>
+
 
 
 </body>
