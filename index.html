@@ -175,31 +175,24 @@
     <h2>Requirements</h2>
 
     <section id="r1-uc-cb">
-      <h2>Generic Packetization and Depacketization Mechanism for Audio Transmission</h2>
+      <h2>Generic Fragmentation and Reassembly Mechanism for Audio Transmission</h2>
 
       <p>This requirement is for <a href="#uc-cb">UC-CB</a>.</p>
 
       <p>
-        When transmitting audio data, sending audio packets with a size greater than 1500 bytes per frame will result in
-        transmission failure.
+
+      During audio transmission via WebRTC, RTP packets encapsulate each audio frame. However, if the frame size exceeds the network's MTU limit (typically 1500 bytes), packet transmission can fail. To overcome this, packet fragmentation and reassembly are needed. Fragmentation occurs at the sender, and reassembly happens at the receiver.
       </p>
 
       <p>
-        Spatial audio codecs like <a href="#dfn-audio-vivid">Audio Vivid</a> have audio packets per frame that are
-        larger than
-        1500 bytes, requiring developers to handle packetization and depacketization separately. In order to improve
-        development efficiency,
-        a generic packetization and depacketization mechanism for audio transmission is needed.
+        WebRTC handles fragmentation and  reassembly for video transmission, but not for audio. It is the responsibility of the application or developer to handle fragmentation and reassembly of audio packets when using WebRTC for audio transmission.
       </p>
 
-      <p>The mechanism should not be mandatory, for some proprietary audio codecs may have its own packetization and
-        depacketization mechanisms.</p>
-
-      <p>A proposed packetization and depacketization workflow can be outlined as follows: </p>
+      <p>A proposed fragmentation and reassembly workflow can be outlined as follows: </p>
 
       <figure id="fig-uc-cb">
-        <img alt="WebMedia" src="images/webrtc-packetization-depacketization.png" width="600">
-        <figcaption><span>a proposed Packetization and Depacketization Workflow</span></figcaption>
+        <img alt="WebMedia" src="images/UC-CB-R1.png" width="600">
+        <figcaption><span>a proposed Fragmentation and Reassembly Workflow</span></figcaption>
       </figure>
 
     </section>
@@ -234,13 +227,18 @@
 
 
     <section id="r3-uc-statistics">
-      <h2>Statistics for Audio and Video Stuttering and Initial Frame Time</h2>
+      <h2>Statistics for Audio and Video Freeze</h2>
 
       <p>This requirement is for <a href="#uc-cb">UC-CB</a>, <a href="#uc-mcc">UC-MCC</a>,  and <a href="#UC-RLC">UC-RLC</a>.</p>
 
-      <p>Currently, WebRTC has encompassed Quality of Service (QoS) metrics including resolution, frame rate, bit rate, and packet loss, and interfaces have been exposed for developers to access various metrics. However,  metrics related to audio and video stuttering, as well as initial frame time, have not yet been provided for statistical analysis and reporting. In WebRTC applications such as interactive live streaming and video conferencing, metrics concerning audio and video stuttering, along with initial frame time, are considered crucial QoS indicators. They offer enhanced insights into the quality of audio and video communication.</p>
       <p>
-        The definition of <b>stuttering</b> needs to be officially defined, and developers can customize the duration of the interval that qualifies as a single instance of stuttering.
+        The current W3C WebRTC standard only provides metrics related to the total duration and count of video freezes, such as <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-totalfreezesduration">totalFreezesDuration</a> and <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>. But it does not provide audio freeze-related metrics (although the underlying WebRTC code has implemented fields like interruptionDuration and interruptionCount for this purpose)。
+      </p>
+
+      <p>Metrics like <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-totalfreezesduration">totalFreezesDuration</a> and <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>  have some limitations, developers cannot retrieve specific freeze details, such as the duration of each individual freeze event.</p>
+
+      <p>
+        The W3C WebRTC standard can provide an API for setting the trigger duration for audio and video freeze (i.e., when the interval between two frames exceeds this duration, it is recorded as a freeze event). Additionally,  an API for retrieving the actual duration of each freeze event is needed. This will aid in identifying network quality issues, helping developers to gain a more comprehensive understanding of the actual freeze conditions in audio and video streams.
       </p>
 
     </section>
