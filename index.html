@@ -88,36 +88,27 @@
       <dt><dfn class="lint-ignore">WebRTC</dfn></dt>
       <dd>Web Real-Time Communication</dd>
     </dl>
-
-    <dl>
-      <dt><dfn class="lint-ignore">Audio Vivid</dfn></dt>
-      <dd>The first AI-based audio encoding and decoding standard, released by the UHD World Association (UWA). Within
-        the Audio Vivid three-dimensional space, sound objects can be precisely positioned and moved freely, while also
-        presenting richer sound details, constructing expansive or subtle three-dimensional soundscapes.</dd>
-    </dl>
   </section>
 
 
   <section>
     <h2>Use Cases</h2>
     <section>
-      <h2 id="uc-cb">5G Cloud Box (UC-CB)</h2>
+      <h2 id="uc-cb">Cloud Box (UC-CB)</h2>
 
       <p>
         A "Cloud Box" can be understood as a cloud-based private room, similar to the private room we have in our real
         lives. Friends can come together in these rooms to chat, watch movies, and watching sports events. In sports
-        broadcasts, fans can participate in predictions and discussions about ongoing matches through the "5G Cloud Box"
+        broadcasts, fans can participate in predictions and discussions about ongoing matches through the "Cloud Box"
         feature, enabling them to share their insights and forecasts in real-time. The Cloud Box feature bridges the gap
         between individuals, enhancing their immersive experience and interaction.
       </p>
 
-      <p>In order to provide a more immersive user experience, spatial audio is utilized in WebRTC when watching Ultra HD sports events.
-
-        .</p>
+      <p>In order to provide a more immersive user experience, spatial audio codecs similar to Dolby Atmos is utilized in WebRTC when watching Ultra HD sports events.</p>
 
       <figure id="fig-uc-cb">
         <img alt="WebMedia" src="images/UC-CB.png" width="300">
-        <figcaption><span>5G Cloud Box</span></figcaption>
+        <figcaption><span>MIGU Cloud Box</span></figcaption>
       </figure>
     </section>
 
@@ -125,12 +116,12 @@
     <section id="uc-mcc">
         <h2>Metaverse Convetion Center (UC-MCC)</h2>
         <p>
-          Built on the foundation of metaverse technologies such as audio-video communication capabilities, 3D resources, and AI-generated avatars,  MiGu Metaverse Convetion Center (MCC) integrates and enhances traditional audio-video conferencing products. It digitizes, gamifies, and adds interactivity to remote meetings, workspaces, and events, creating a completely new immersive experience in the form of a bit-space interactive communication platform.
+          Built on the foundation of metaverse technologies such as audio-video communication capabilities, 3D resources, and AI-generated avatars,  MIGU Metaverse Convetion Center (MCC) integrates and enhances traditional audio-video conferencing products. It digitizes, gamifies, and adds interactivity to remote meetings, workspaces, and events, creating a completely new immersive experience in the form of a bit-space interactive communication platform.
         </p>
 
         <figure id="fig-uc-mcc">
           <img alt="WebMedia" src="images/UC-MCC.png" width="600">
-          <figcaption><span>MiGu Metaverse Convetion Center</span></figcaption>
+          <figcaption><span>MIGU Metaverse Convetion Center</span></figcaption>
         </figure>
 
     </section>
@@ -231,14 +222,22 @@
 
       <p>This requirement is for <a href="#uc-cb">UC-CB</a>, <a href="#uc-mcc">UC-MCC</a>,  and <a href="#UC-RLC">UC-RLC</a>.</p>
 
-      <p>
-        The current W3C WebRTC standard only provides metrics related to the total duration and count of video freezes, such as <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-totalfreezesduration">totalFreezesDuration</a> and <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>. But it does not provide audio freeze-related metrics (although the underlying WebRTC code has implemented fields like interruptionDuration and interruptionCount for this purpose)。
+
+      <p>In the W3C <a href="https://www.w3.org/TR/webrtc-stats/">Identifiers for WebRTC's Statistics API</a> spec, the logic for marking a video freeze, is defined as follows(see <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>):
+        <ol>
+          <li>
+            Calculate the linear average of the past 30 rendering frame durations and label it as avg_frame_duration_ms.
+          </li>
+          <li>
+            Calculate the interval between the current two frames. If this value is greater than Max(3 * avg_frame_duration_ms, avg_frame_duration_ms + 150), it is considered as a freeze.
+          </li>
+        </ol>
+        In situations where the network is good, this logic is quite reasonable. However, in the case of a weak network, the value of <code>avg_frame_duration_ms</code> may be larger, for example, 150ms. In this scenario, the freeze trigger value would be 450ms, which may not be reasonable. As generally, 200ms might be considered a freeze. So The spec can define  an API for setting the trigger duration for video freeze (i.e., when the interval between two frames exceeds this duration, it is recorded as a freeze event).
       </p>
 
-      <p>Metrics like <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-totalfreezesduration">totalFreezesDuration</a> and <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>  have some limitations, developers cannot retrieve specific freeze details, such as the duration of each individual freeze event.</p>
-
       <p>
-        The W3C WebRTC standard can provide an API for setting the trigger duration for audio and video freeze (i.e., when the interval between two frames exceeds this duration, it is recorded as a freeze event). Additionally,  an API for retrieving the actual duration of each freeze event is needed. This will aid in identifying network quality issues, helping developers to gain a more comprehensive understanding of the actual freeze conditions in audio and video streams.
+        Meanwhile, The W3C spec does not define metrics for audio-related freeze , although the underlying WebRTC code has already implemented them with the fields <code>totalInterruptionDuration</code> and <code>interruptionCount</code>. The metrics can be exposed to developers.
+
       </p>
 
     </section>
