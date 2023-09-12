@@ -104,6 +104,10 @@
         between individuals, enhancing their immersive experience and interaction.
       </p>
 
+      <p>
+        In this scenario, participants can engage in real-time interactions through WebRTC.
+      </p>
+
       <p>In order to provide a more immersive user experience, spatial audio codecs similar to Dolby Atmos is utilized in WebRTC when watching Ultra HD sports events.</p>
 
       <figure id="fig-uc-cb">
@@ -113,18 +117,6 @@
     </section>
 
 
-    <section id="uc-mcc">
-        <h2>Metaverse Convetion Center (UC-MCC)</h2>
-        <p>
-          Built on the foundation of metaverse technologies such as audio-video communication capabilities, 3D resources, and AI-generated avatars,  MIGU Metaverse Convetion Center (MCC) integrates and enhances traditional audio-video conferencing products. It digitizes, gamifies, and adds interactivity to remote meetings, workspaces, and events, creating a completely new immersive experience in the form of a bit-space interactive communication platform.
-        </p>
-
-        <figure id="fig-uc-mcc">
-          <img alt="WebMedia" src="images/UC-MCC.png" width="600">
-          <figcaption><span>MIGU Metaverse Convetion Center</span></figcaption>
-        </figure>
-
-    </section>
 
 
     <section>
@@ -141,7 +133,6 @@
       </p>
 
       <p>
-
         Viewers can actively participate by using real-time commenting or chat features to interact with the hosts. They
         can ask questions, express their interest in purchasing, and even share their own product experiences with
         fellow viewers. When a viewer shows interest in a particular product, they can instantly make a purchase using
@@ -149,15 +140,41 @@
       </p>
 
       <p>
-
-        Live Commerce provides a uniquely interactive and entertaining shopping experience. Viewers gain immediate
-        insights into product details, witness live demonstrations, and benefit from additional information provided by
-        the hosts. This high level of engagement not only enhances consumer confidence in making purchase decisions but
-        also introduces a dynamic and powerful approach to brand marketing.
+        Occasionally, invited guests can participate in live interactions with the hosts, aiding in sales through WebRTC-powered video/audio chat.      
       </p>
 
-      <p>WebRTC can be used in this Scenario.</p>
+      <figure id="fig-uc-cb">
+        <img alt="WebMedia" src="images/UC-RLC.png" width="300">
+        <figcaption><span>Real-time Live Commerce</span></figcaption>
+      </figure>
+
     </section>
+
+
+    <section id="uc-mcc">
+      <h2>Metaverse Convetion Center (UC-MCC)</h2>
+      <p>
+
+        The Metaverse Convention Center is a type of cloud game that incorporates advanced technologies such as WebRTC for interactive communication, 3D rendering, and AI-generated avatars. It transforms traditional audio-video conferencing into virtual, gamified, and interactive experiences for remote meetings, office use, and events. 
+  
+
+      </p>
+
+      <p>
+        Users have the ability to create their own virtual characters, which can range from cartoon-style to realistic representations, and select from a variety of meeting rooms to align with their preferences.
+      </p>
+
+      <p>
+        In this scenario, all the resources are rendered on the cloud and then streamed to the browser using WebRTC. Any control commands in the browser are executed based on WebRTC.
+      </p>
+
+      <figure id="fig-uc-mcc">
+        <img alt="WebMedia" src="images/UC-MCC.png" width="600">
+        <figcaption><span>MIGU Metaverse Convetion Center</span></figcaption>
+      </figure>
+
+    </section>
+
   </section>
 
 
@@ -189,6 +206,32 @@
     </section>
 
 
+  
+    <section id="r3-uc-statistics">
+      <h2>Statistics for Audio and Video Freeze</h2>
+
+      <p>This requirement is for <a href="#uc-cb">UC-CB</a>, <a href="#uc-mcc">UC-MCC</a>,  and <a href="#UC-RLC">UC-RLC</a>.</p>
+
+
+      <p>In the W3C <a href="https://www.w3.org/TR/webrtc-stats/">Identifiers for WebRTC's Statistics API</a> spec, the logic for marking a video freeze, is defined as follows(see <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>):
+        <ol>
+          <li>
+            Calculate the linear average of the past 30 rendering frame durations and label it as avg_frame_duration_ms.
+          </li>
+          <li>
+            Calculate the interval between the current two frames. If this value is greater than Max(3 * avg_frame_duration_ms, avg_frame_duration_ms + 150), it is considered as a freeze.
+          </li>
+        </ol>
+        In situations where the network is good, this logic is quite reasonable. However, in the case of a weak network, the value of <code>avg_frame_duration_ms</code> may be larger, for example, 150ms. In this scenario, the freeze trigger value would be 450ms, which may not be reasonable. As generally, 200ms might be considered a freeze. So The spec can define  an API for setting the trigger duration for video freeze (i.e., when the interval between two frames exceeds this duration, it is recorded as a freeze event).
+      </p>
+
+      <p>
+        Meanwhile, The W3C spec does not define metrics for audio-related freeze , although the underlying WebRTC code has already implemented them with the fields <code>totalInterruptionDuration</code> and <code>interruptionCount</code>. The metrics can be exposed to developers.
+
+      </p>
+
+    </section>
+
     <section id="r2-uc-cb">
       <h2>Receiving sounds from other devices when in background</h2>
 
@@ -211,32 +254,6 @@
         <li>Device A unmutes and speaks.</li>
         <li>Device B can't hear A, even if B goes back to the foreground.</li>
       </ul>
-
-      </p>
-
-    </section>
-
-
-    <section id="r3-uc-statistics">
-      <h2>Statistics for Audio and Video Freeze</h2>
-
-      <p>This requirement is for <a href="#uc-cb">UC-CB</a>, <a href="#uc-mcc">UC-MCC</a>,  and <a href="#UC-RLC">UC-RLC</a>.</p>
-
-
-      <p>In the W3C <a href="https://www.w3.org/TR/webrtc-stats/">Identifiers for WebRTC's Statistics API</a> spec, the logic for marking a video freeze, is defined as follows(see <a href="https://www.w3.org/TR/webrtc-stats/#dom-rtcinboundrtpstreamstats-freezecount">freezeCount</a>):
-        <ol>
-          <li>
-            Calculate the linear average of the past 30 rendering frame durations and label it as avg_frame_duration_ms.
-          </li>
-          <li>
-            Calculate the interval between the current two frames. If this value is greater than Max(3 * avg_frame_duration_ms, avg_frame_duration_ms + 150), it is considered as a freeze.
-          </li>
-        </ol>
-        In situations where the network is good, this logic is quite reasonable. However, in the case of a weak network, the value of <code>avg_frame_duration_ms</code> may be larger, for example, 150ms. In this scenario, the freeze trigger value would be 450ms, which may not be reasonable. As generally, 200ms might be considered a freeze. So The spec can define  an API for setting the trigger duration for video freeze (i.e., when the interval between two frames exceeds this duration, it is recorded as a freeze event).
-      </p>
-
-      <p>
-        Meanwhile, The W3C spec does not define metrics for audio-related freeze , although the underlying WebRTC code has already implemented them with the fields <code>totalInterruptionDuration</code> and <code>interruptionCount</code>. The metrics can be exposed to developers.
 
       </p>
 
